@@ -23,12 +23,12 @@ export default function Home() {
   useEffect(() => {
     if (typeof window === 'undefined' || mapInstanceRef.current || !mapRef.current) return
     const L = require('leaflet')
-    const map = L.map(mapRef.current, { zoomControl: false }).setView([34.8862, 35.8836], 12)
+    const map = L.map(mapRef.current, { zoomControl: false }).setView([34.8862, 35.8836], 13)
     mapInstanceRef.current = map
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '© OpenStreetMap © CARTO'
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© Esri'
     }).addTo(map)
-    L.control.zoom({ position: 'bottomright' }).addTo(map)
+    L.control.zoom({ position: 'bottomleft' }).addTo(map)
   }, [])
 
   useEffect(() => {
@@ -40,14 +40,14 @@ export default function Home() {
       const icon = L.divIcon({
         className: '',
         html: `<div style="
-          width:12px;height:12px;
-          background:#1a1a1a;
+          width:14px;height:14px;
+          background:#f59e0b;
           border-radius:50%;
-          border:2px solid white;
-          box-shadow:0 2px 8px rgba(0,0,0,0.3)
+          border:2.5px solid white;
+          box-shadow:0 2px 12px rgba(0,0,0,0.4)
         "></div>`,
-        iconSize: [12, 12],
-        iconAnchor: [6, 6],
+        iconSize: [14, 14],
+        iconAnchor: [7, 7],
       })
       const marker = L.marker([land.lat, land.lng], { icon }).addTo(map)
       marker.on('click', () => setSelected(land))
@@ -55,36 +55,49 @@ export default function Home() {
   }, [lands])
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', fontFamily: "'Segoe UI', sans-serif" }}>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+        * { font-family: 'Cairo', sans-serif; }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+          to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+      `}</style>
 
       {/* Navbar */}
       <nav style={{
         position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1000,
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '0 32px', height: 60,
-        background: 'rgba(255,255,255,0.92)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(0,0,0,0.06)',
+        padding: '0 28px', height: 64,
+        background: 'rgba(10,10,10,0.75)',
+        backdropFilter: 'blur(16px)',
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
       }}>
-        <span style={{ fontWeight: 700, fontSize: 18, color: '#1a1a1a', letterSpacing: '-0.5px' }}>
-          أرض ماب
+        <span style={{
+          fontWeight: 700, fontSize: 20, color: 'white',
+          letterSpacing: '-0.3px'
+        }}>
+          🗺 أرض ماب
         </span>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <button onClick={() => router.push('/login')} style={{
-            background: 'none', border: 'none',
-            color: '#1a1a1a', fontSize: 13, cursor: 'pointer',
-            padding: '8px 16px', borderRadius: 8,
-            fontFamily: 'inherit',
+            background: 'rgba(255,255,255,0.1)',
+            border: '1px solid rgba(255,255,255,0.15)',
+            color: 'white', fontSize: 13, cursor: 'pointer',
+            padding: '8px 18px', borderRadius: 10,
+            fontFamily: 'Cairo, sans-serif',
           }}>
-            دخول
+            تسجيل الدخول
           </button>
           <button onClick={() => router.push('/register')} style={{
-            background: '#1a1a1a', border: 'none',
+            background: '#f59e0b',
+            border: 'none',
             color: 'white', fontSize: 13, cursor: 'pointer',
-            padding: '8px 18px', borderRadius: 8,
-            fontFamily: 'inherit', fontWeight: 500,
+            padding: '8px 20px', borderRadius: 10,
+            fontFamily: 'Cairo, sans-serif', fontWeight: 600,
           }}>
-            بيع أرض
+            + بيع أرض
           </button>
         </div>
       </nav>
@@ -94,13 +107,12 @@ export default function Home() {
 
       {/* Counter */}
       <div style={{
-        position: 'absolute', bottom: 32, left: 32, zIndex: 1000,
-        background: 'rgba(255,255,255,0.92)',
+        position: 'absolute', bottom: 28, right: 28, zIndex: 1000,
+        background: 'rgba(10,10,10,0.7)',
         backdropFilter: 'blur(12px)',
         borderRadius: 10, padding: '8px 16px',
-        border: '1px solid rgba(0,0,0,0.06)',
-        fontSize: 12, color: '#6b7280',
-        letterSpacing: '0.02em',
+        border: '1px solid rgba(255,255,255,0.1)',
+        fontSize: 12, color: 'rgba(255,255,255,0.7)',
       }}>
         {lands.length} أرض معروضة
       </div>
@@ -110,73 +122,71 @@ export default function Home() {
         <div style={{
           position: 'absolute', bottom: 32, left: '50%',
           transform: 'translateX(-50%)',
-          background: 'white',
-          borderRadius: 16, padding: '24px 28px',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.12)',
+          background: 'rgba(10,10,10,0.85)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: 18, padding: '24px 28px',
+          boxShadow: '0 12px 48px rgba(0,0,0,0.4)',
+          border: '1px solid rgba(255,255,255,0.1)',
           zIndex: 1000, width: 360,
           direction: 'rtl',
-          animation: 'fadeUp 0.2s ease',
+          animation: 'fadeUp 0.25s ease',
+          color: 'white',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 4 }}>
-            <h2 style={{ fontSize: 16, fontWeight: 600, color: '#1a1a1a', margin: 0 }}>{selected.title}</h2>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: 'white', margin: 0 }}>{selected.title}</h2>
             <button onClick={() => setSelected(null)} style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              color: '#9ca3af', fontSize: 16, padding: 0, lineHeight: 1,
+              color: 'rgba(255,255,255,0.4)', fontSize: 18, padding: 0,
             }}>✕</button>
           </div>
 
-          <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 20px', letterSpacing: '0.02em' }}>
-            {selected.location_text}
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: '0 0 20px' }}>
+            📍 {selected.location_text}
           </p>
 
-          <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             <div style={{
-              flex: 1, background: '#f9f9f9', borderRadius: 10,
-              padding: '12px 16px', textAlign: 'center',
+              flex: 1, background: 'rgba(255,255,255,0.07)',
+              borderRadius: 12, padding: '14px 16px', textAlign: 'center',
+              border: '1px solid rgba(255,255,255,0.08)',
             }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>{selected.area_sqm}</div>
-              <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>م²</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#f59e0b' }}>{selected.area_sqm}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>متر مربع</div>
             </div>
             <div style={{
-              flex: 1, background: '#f9f9f9', borderRadius: 10,
-              padding: '12px 16px', textAlign: 'center',
+              flex: 1, background: 'rgba(255,255,255,0.07)',
+              borderRadius: 12, padding: '14px 16px', textAlign: 'center',
+              border: '1px solid rgba(255,255,255,0.08)',
             }}>
-              <div style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>{selected.price?.toLocaleString()}</div>
-              <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>ل.س</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#f59e0b' }}>{selected.price?.toLocaleString()}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>ل.س</div>
             </div>
           </div>
 
           {selected.description && (
-            <p style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.6, marginBottom: 20 }}>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 20 }}>
               {selected.description}
             </p>
           )}
 
           <div style={{
-            borderTop: '1px solid #f3f4f6', paddingTop: 16,
+            borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16,
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}>
             <div>
-              <div style={{ fontSize: 12, color: '#9ca3af' }}>البائع</div>
-              <div style={{ fontSize: 13, fontWeight: 500, color: '#1a1a1a' }}>{selected.profiles?.full_name}</div>
+              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>البائع</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>{selected.profiles?.full_name}</div>
             </div>
             <a href={`tel:${selected.profiles?.phone}`} style={{
-              background: '#1a1a1a', color: 'white',
-              borderRadius: 8, padding: '8px 16px',
-              fontSize: 13, textDecoration: 'none', fontWeight: 500,
+              background: '#f59e0b', color: 'white',
+              borderRadius: 10, padding: '10px 20px',
+              fontSize: 13, textDecoration: 'none', fontWeight: 700,
             }}>
-              اتصال
+              📞 اتصال
             </a>
           </div>
         </div>
       )}
-
-      <style>{`
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-          to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-      `}</style>
     </div>
   )
 }
