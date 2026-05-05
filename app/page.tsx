@@ -25,8 +25,9 @@ export default function Home() {
     const L = require('leaflet')
     const map = L.map(mapRef.current, { zoomControl: false }).setView([34.8862, 35.8836], 13)
     mapInstanceRef.current = map
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      attribution: '© Esri'
+    L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+      attribution: '© Google Maps',
+      maxZoom: 20,
     }).addTo(map)
     L.control.zoom({ position: 'bottomleft' }).addTo(map)
   }, [])
@@ -41,7 +42,7 @@ export default function Home() {
         className: '',
         html: `<div style="
           width:14px;height:14px;
-          background:#f59e0b;
+          background:#f03e1b;
           border-radius:50%;
           border:2.5px solid white;
           box-shadow:0 2px 12px rgba(0,0,0,0.4)
@@ -58,7 +59,7 @@ export default function Home() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
-        * { font-family: 'Cairo', sans-serif; }
+        * { font-family: 'Cairo', sans-serif; box-sizing: border-box; }
         @keyframes fadeUp {
           from { opacity: 0; transform: translateX(-50%) translateY(16px); }
           to   { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -69,35 +70,30 @@ export default function Home() {
       <nav style={{
         position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1000,
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '0 28px', height: 64,
-        background: 'rgba(10,10,10,0.75)',
-        backdropFilter: 'blur(16px)',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        padding: '0 32px', height: 64,
+        background: 'white',
+        borderBottom: '1px solid #f0f0f0',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
       }}>
-        <span style={{
-          fontWeight: 700, fontSize: 20, color: 'white',
-          letterSpacing: '-0.3px'
-        }}>
-          🗺 أرض ماب
+        <span style={{ fontWeight: 700, fontSize: 20, color: '#1a1a1a' }}>
+          أرض ماب
         </span>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <button onClick={() => router.push('/login')} style={{
-            background: 'rgba(255,255,255,0.1)',
-            border: '1px solid rgba(255,255,255,0.15)',
-            color: 'white', fontSize: 13, cursor: 'pointer',
-            padding: '8px 18px', borderRadius: 10,
-            fontFamily: 'Cairo, sans-serif',
+            background: 'none', border: '1px solid #e5e5e5',
+            color: '#1a1a1a', fontSize: 14, cursor: 'pointer',
+            padding: '8px 20px', borderRadius: 8,
+            fontFamily: 'Cairo, sans-serif', fontWeight: 500,
           }}>
-            تسجيل الدخول
+            دخول
           </button>
           <button onClick={() => router.push('/register')} style={{
-            background: '#f59e0b',
-            border: 'none',
-            color: 'white', fontSize: 13, cursor: 'pointer',
-            padding: '8px 20px', borderRadius: 10,
+            background: '#f03e1b', border: 'none',
+            color: 'white', fontSize: 14, cursor: 'pointer',
+            padding: '8px 22px', borderRadius: 8,
             fontFamily: 'Cairo, sans-serif', fontWeight: 600,
           }}>
-            + بيع أرض
+            بيع أرض
           </button>
         </div>
       </nav>
@@ -108,11 +104,9 @@ export default function Home() {
       {/* Counter */}
       <div style={{
         position: 'absolute', bottom: 28, right: 28, zIndex: 1000,
-        background: 'rgba(10,10,10,0.7)',
-        backdropFilter: 'blur(12px)',
-        borderRadius: 10, padding: '8px 16px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        fontSize: 12, color: 'rgba(255,255,255,0.7)',
+        background: 'white', borderRadius: 10, padding: '8px 16px',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.1)',
+        fontSize: 13, color: '#6b7280', fontFamily: 'Cairo, sans-serif',
       }}>
         {lands.length} أرض معروضة
       </div>
@@ -122,64 +116,61 @@ export default function Home() {
         <div style={{
           position: 'absolute', bottom: 32, left: '50%',
           transform: 'translateX(-50%)',
-          background: 'rgba(10,10,10,0.85)',
-          backdropFilter: 'blur(20px)',
-          borderRadius: 18, padding: '24px 28px',
-          boxShadow: '0 12px 48px rgba(0,0,0,0.4)',
-          border: '1px solid rgba(255,255,255,0.1)',
+          background: 'white',
+          borderRadius: 16, padding: '24px 28px',
+          boxShadow: '0 8px 40px rgba(0,0,0,0.15)',
           zIndex: 1000, width: 360,
           direction: 'rtl',
           animation: 'fadeUp 0.25s ease',
-          color: 'white',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 4 }}>
-            <h2 style={{ fontSize: 16, fontWeight: 700, color: 'white', margin: 0 }}>{selected.title}</h2>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#1a1a1a', margin: 0 }}>{selected.title}</h2>
             <button onClick={() => setSelected(null)} style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              color: 'rgba(255,255,255,0.4)', fontSize: 18, padding: 0,
+              color: '#9ca3af', fontSize: 18, padding: 0,
             }}>✕</button>
           </div>
 
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', margin: '0 0 20px' }}>
+          <p style={{ fontSize: 12, color: '#9ca3af', margin: '0 0 20px' }}>
             📍 {selected.location_text}
           </p>
 
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             <div style={{
-              flex: 1, background: 'rgba(255,255,255,0.07)',
-              borderRadius: 12, padding: '14px 16px', textAlign: 'center',
-              border: '1px solid rgba(255,255,255,0.08)',
+              flex: 1, background: '#fff5f3', borderRadius: 10,
+              padding: '12px 16px', textAlign: 'center',
+              border: '1px solid #ffe4de',
             }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#f59e0b' }}>{selected.area_sqm}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>متر مربع</div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: '#f03e1b' }}>{selected.area_sqm}</div>
+              <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>متر مربع</div>
             </div>
             <div style={{
-              flex: 1, background: 'rgba(255,255,255,0.07)',
-              borderRadius: 12, padding: '14px 16px', textAlign: 'center',
-              border: '1px solid rgba(255,255,255,0.08)',
+              flex: 1, background: '#fff5f3', borderRadius: 10,
+              padding: '12px 16px', textAlign: 'center',
+              border: '1px solid #ffe4de',
             }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#f59e0b' }}>{selected.price?.toLocaleString()}</div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 2 }}>ل.س</div>
+              <div style={{ fontSize: 17, fontWeight: 700, color: '#f03e1b' }}>{selected.price?.toLocaleString()}</div>
+              <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>ل.س</div>
             </div>
           </div>
 
           {selected.description && (
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.7, marginBottom: 20 }}>
+            <p style={{ fontSize: 13, color: '#4b5563', lineHeight: 1.7, marginBottom: 20 }}>
               {selected.description}
             </p>
           )}
 
           <div style={{
-            borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: 16,
+            borderTop: '1px solid #f3f4f6', paddingTop: 16,
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}>
             <div>
-              <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>البائع</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: 'white' }}>{selected.profiles?.full_name}</div>
+              <div style={{ fontSize: 11, color: '#9ca3af' }}>البائع</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#1a1a1a' }}>{selected.profiles?.full_name}</div>
             </div>
             <a href={`tel:${selected.profiles?.phone}`} style={{
-              background: '#f59e0b', color: 'white',
-              borderRadius: 10, padding: '10px 20px',
+              background: '#f03e1b', color: 'white',
+              borderRadius: 8, padding: '10px 20px',
               fontSize: 13, textDecoration: 'none', fontWeight: 700,
             }}>
               📞 اتصال
