@@ -26,7 +26,7 @@ export default function Home() {
     const map = L.map(mapRef.current, { zoomControl: false }).setView([34.8862, 35.8836], 13)
     mapInstanceRef.current = map
     L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-      attribution: '© Google Maps',
+      attribution: '© Google',
       maxZoom: 20,
     }).addTo(map)
     L.control.zoom({ position: 'bottomleft' }).addTo(map)
@@ -37,21 +37,24 @@ export default function Home() {
     const L = require('leaflet')
     const map = mapInstanceRef.current
     lands.forEach(land => {
-      if (!land.lat || !land.lng) return
-      const icon = L.divIcon({
-        className: '',
-        html: `<div style="
-          width:14px;height:14px;
-          background:#f03e1b;
-          border-radius:50%;
-          border:2.5px solid white;
-          box-shadow:0 2px 12px rgba(0,0,0,0.4)
-        "></div>`,
-        iconSize: [14, 14],
-        iconAnchor: [7, 7],
-      })
-      const marker = L.marker([land.lat, land.lng], { icon }).addTo(map)
-      marker.on('click', () => setSelected(land))
+      if (land.polygon && land.polygon.length >= 3) {
+        const poly = L.polygon(land.polygon, {
+          color: '#f03e1b',
+          weight: 2.5,
+          fillColor: '#f03e1b',
+          fillOpacity: 0.2,
+        }).addTo(map)
+        poly.on('click', () => setSelected(land))
+      } else if (land.lat && land.lng) {
+        const icon = L.divIcon({
+          className: '',
+          html: `<div style="width:14px;height:14px;background:#f03e1b;border-radius:50%;border:2.5px solid white;box-shadow:0 2px 12px rgba(0,0,0,0.4)"></div>`,
+          iconSize: [14, 14],
+          iconAnchor: [7, 7],
+        })
+        const marker = L.marker([land.lat, land.lng], { icon }).addTo(map)
+        marker.on('click', () => setSelected(land))
+      }
     })
   }, [lands])
 
