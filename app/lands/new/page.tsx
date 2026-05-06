@@ -94,7 +94,9 @@ export default function NewLand() {
       status: 'pending',
       lat: polygon[0][0],
       lng: polygon[0][1],
+      polygon: polygon,
     })
+  
 
     if (error) { setError(error.message); setLoading(false); return }
     router.push('/dashboard')
